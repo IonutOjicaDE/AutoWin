@@ -170,11 +170,19 @@ Each line represents a command with optional arguments.
 
 ![Screenshot – Automation sheet in AutoWin](/img/AutoWin.xlsm-Automation.png "Automation sheet")
 
+*Figure 1 - Automation sheet in AutoWin*
+
 ![Screenshot – KeyPress sheet in AutoWin](/img/AutoWin.xlsm-KeyPress.png "KeyPress sheet")
+
+*Figure 2 - KeyPress sheet in AutoWin*
 
 ![Screenshot – Execute Macro window in AutoWin - Ctrl+Shift+M](/img/ExecuteMacro.png "Execute Macro window")
 
+*Figure 3 - Execute Macro window in AutoWin*
+
 ![Screenshot – Command Picker window in AutoWin - Ctrl+Shift+N](/img/CommandPicker.png "Command Picker window")
+
+*Figure 4 - Command Picker window in AutoWin*
 
 ---
 
