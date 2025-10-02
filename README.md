@@ -46,7 +46,7 @@ AutoWin comes with a comprehensive set of features for Windows and Office automa
 * Adding a new command requires only mapping it in `commandMap` and implementing a VBA function that returns `True` on success or `False` on error.
 * Example: the `Skip` command demonstrates how new commands can be added with minimal code.
 
-?? **User interface**
+**User interface**
 
 * Press `Ctrl+Shift+N` to open the **Command Picker** (`ufCommand`), which lists commands by category, explains their arguments, and inserts them into the automation sheet.
 
@@ -140,7 +140,7 @@ All current features are considered stable. File operations (copy, move, delete,
 
 4. Run the automation:
 
-   * Press `Ctrl+Shift+N` to open the **Command Picker** (`ufCommand`).
+   * Press `Ctrl+Shift+M` to open the **Execute Macro** (`ufAutoWin`).
    * Select your automation and execute it.
    * Notepad will open, activate, and type *Hello World!* automatically.
 
@@ -166,12 +166,15 @@ Each line represents a command with optional arguments.
 
 ---
 
-### Recommended screenshots
+### Screenshots
 
-* Full view of **Automation** sheet with a simple automation.
-* **KeyPress** sheet to show keyboard mappings.
-* **Command Picker (ufCommand)** form, to illustrate how commands can be inserted.
-* Optionally: execution log file (`AutoWin.log`) after a successful run.
+![Screenshot – Automation sheet in AutoWin](/img/AutoWin.xlsm-Automation.png "Automation sheet")
+
+![Screenshot – KeyPress sheet in AutoWin](/img/AutoWin.xlsm-KeyPress.png "KeyPress sheet")
+
+![Screenshot – Execute Macro window in AutoWin - Ctrl+Shift+M](/img/ExecuteMacro.png "Execute Macro window")
+
+![Screenshot – Command Picker window in AutoWin - Ctrl+Shift+N](/img/CommandPicker.png "Command Picker window")
 
 ---
 
@@ -188,7 +191,7 @@ Set window position             | Arg1=Notepad Arg2=15 Arg3=15 Arg4=1890 Arg5=11
 End Sub
 ```
 
-? Opens Notepad, activates it, and resizes the window to nearly full screen.
+=> Opens Notepad, activates it, and resizes the window to nearly full screen.
 
 ---
 
@@ -205,7 +208,7 @@ Next
 End Sub
 ```
 
-? Loops through 10 iterations, ensuring Notepad is maximized.
+=> Loops through 10 iterations, ensuring Notepad is maximized.
 
 ---
 
@@ -219,7 +222,7 @@ Left click    | Arg1=1400 Arg2=820    | Comment=Hide option
 End Sub
 ```
 
-? Opens the Windows taskbar menu and hides the Search icon automatically.
+=> Opens the Windows taskbar menu and hides the Search icon automatically.
 
 ---
 
