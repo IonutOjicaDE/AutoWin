@@ -2,11 +2,12 @@ Attribute VB_Name = "AutoWinExecution"
 Option Explicit
 Private Const MODULE_NAME As String = "AutoWinExecution"
 
-Public Sub ExecuteAutomation()
+Public Function ExecuteAutomation()
   On Error GoTo eh
   Call ufAutoWin.Show(vbModal) ' Get Sub to start execution - wait to close the window
   If ufAutoWin.SelectedLine < 1 Then GoTo done Else currentRow = ufAutoWin.SelectedLine
-  
+  Sleep minWaitTime
+
   Do Until stopExecutionRequired
     Call CenterViewToCurrentRow
     Call SaveCurrentRowValues
@@ -34,7 +35,7 @@ Public Sub ExecuteAutomation()
       If tooManyEmptyRows Then GoTo StopExecution
       StatusUpdate StatusSKIP
       
-      If Not HandleBeforeChecks Then GoTo StopExecution
+      ' If Not HandleBeforeChecks Then GoTo StopExecution
     End If
 
     currentRow = currentRow + 1
@@ -45,21 +46,23 @@ StopExecution:
 
 done:
   Application.StatusBar = False
-  Exit Sub
+  Exit Function
 eh:
   Application.StatusBar = False
-  RaiseError MODULE_NAME & ".ExecuteAutomation", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".ExecuteAutomation", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Private Function HandleBeforeChecks() As Boolean
 110  On Error GoTo eh
+
 120  If Not WaitWindowToActivate Then
 130    HandleBeforeChecks = False
 140    RaiseError MODULE_NAME & ".HandleBeforeChecks", Err.Number, Err.Source, "No window with the mentioned name found => execution will stop.", Erl, 1
 150    Exit Function
 160  End If
 165  'Err.Raise 2000
+
 170  If Not WaitColorUnderCursor Then
 180    HandleBeforeChecks = False
 190    RaiseError MODULE_NAME & ".HandleBeforeChecks", Err.Number, Err.Source, "The color under cursor is not the same as mentioned => execution will stop.", Erl, 2
@@ -68,11 +71,13 @@ Private Function HandleBeforeChecks() As Boolean
 
 220  Static sleepTime As Long
 230  If IsNumber(CStr(currentRowArray(1, ColAPause))) Then sleepTime = maxLong(CLng(currentRowArray(1, ColAPause)), minWaitTime) Else sleepTime = minWaitTime
+
 240  shAuto.Calculate
 250  Application.ScreenUpdating = False
 260  Application.ScreenUpdating = True
 270  'ActiveSheet.EnableCalculation = False
 280  'ActiveSheet.EnableCalculation = True
+
 290  If MySleep(sleepTime) Then
 300    ' Mouse moved
 310    HandleBeforeChecks = False
@@ -86,7 +91,7 @@ done:
 360  Exit Function
 eh:
 370  HandleBeforeChecks = False
-380  RaiseError MODULE_NAME & ".HandleBeforeChecks", Err.Number, Err.Source, Err.description, Erl
+380  RaiseError MODULE_NAME & ".HandleBeforeChecks", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 Private Function tooManyEmptyRows() As Boolean
@@ -96,5 +101,5 @@ Private Function tooManyEmptyRows() As Boolean
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".tooManyEmptyRows", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".tooManyEmptyRows", Err.Number, Err.Source, Err.Description, Erl
 End Function
