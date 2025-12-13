@@ -3,7 +3,7 @@ Option Explicit
 Private Const MODULE_NAME As String = "CommandsCondition"
 Private tmpL As Long, tmpS As String, tmpR As Range
 
-Public Sub RegisterCommandsCondition()
+Public Function RegisterCommandsCondition()
   On Error GoTo eh
   ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "stop", Array("CommandStop", "Stop", MODULE_NAME, "Stops the execution.")
@@ -24,19 +24,19 @@ Public Sub RegisterCommandsCondition()
     "Line if False", "What line or label should be next if condition is false." & loopListLabel)
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsCondition", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsCondition()
+  RaiseError MODULE_NAME & ".RegisterCommandsCondition", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsCondition()
   On Error GoTo eh
 
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsCondition", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsCondition", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Public Function CommandStop(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -54,7 +54,7 @@ done:
   Exit Function
 eh:
   CommandSkip = False
-  RaiseError MODULE_NAME & ".CommandSkip", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandSkip", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function CommandIfThenSkip(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -75,7 +75,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfThenSkip = False
-  RaiseError MODULE_NAME & ".CommandIfThenSkip", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfThenSkip", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -97,7 +97,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfThenGoTo = False
-  RaiseError MODULE_NAME & ".CommandIfThenGoTo", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfThenGoTo", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -128,7 +128,7 @@ NormalExecution:
   Exit Function
 eh:
   SkipLines = False
-  RaiseError MODULE_NAME & ".SkipLines", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SkipLines", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 Public Function GotoLineOrLabel(LineOrLabel As String, ArgName As String, Optional EmptyIsError As Boolean = False) As Boolean
@@ -170,5 +170,5 @@ NormalExecution:
   Exit Function
 eh:
   GotoLineOrLabel = False
-  RaiseError MODULE_NAME & ".GotoLineOrLabel", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GotoLineOrLabel", Err.Number, Err.Source, Err.Description, Erl
 End Function
