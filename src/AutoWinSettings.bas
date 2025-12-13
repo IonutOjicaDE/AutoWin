@@ -65,7 +65,8 @@ Public colorCheckMax As Long:     Public Const colorCheckMaxDefault     As Long 
 Public colorCheckSplit As Long:   Public Const colorCheckSplitDefault   As Long = 100&
 ' === color tolerance between detected and expected color, applied to each channel    ===
 Public maxColorTolerance As Long: Public Const maxColorToleranceDefault As Long = 10&
-
+' === read color on the further mouse commands, before moving mouse                   ===
+Public colorReadFirst As Boolean: Public Const colorReadFirstDefault    As Boolean = False
 
 
 ' === waiting time after a keypress, in ms                                            ===
@@ -106,6 +107,10 @@ Public Const loopListLabel As String = "{list_label}" ' label
 Public Const loopListFor   As String = "{list_for}"   ' for, foreach
 Public Const loopListLoop  As String = "{list_loop}"  ' do, dowhile, dountil
 
+' Shortcodes for KeyPress sheet
+Public Const keyPressName     As String = "{key_name}"      ' maps to ColKeyName
+Public Const keyPressSendKeys As String = "{key_sendkeys}"  ' maps to ColKeySendKeys
+
 Public Const loopListFlagNone  As Long = 0&
 Public Const loopListFlagSub   As Long = 1&
 Public Const loopListFlagLabel As Long = 2&
@@ -121,18 +126,18 @@ Public ApplicationStatusBar As String
 '#######                               #######
 '#############################################
 
-Public Sub InitializeSettings()
+Public Function InitializeSettings()
   On Error GoTo eh
   Call InitializeParameters
   Call InitializeCommandMap
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".InitializeSettings", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".InitializeSettings", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
-Private Sub InitializeParameters()
+Private Function InitializeParameters()
   On Error GoTo eh
   currentRow = startRow
   maxEmptyRows = maxEmptyRowsDefault
@@ -147,7 +152,8 @@ Private Sub InitializeParameters()
   colorCheckMax = colorCheckMaxDefault
   colorCheckSplit = colorCheckSplitDefault
   maxColorTolerance = maxColorToleranceDefault
-  
+  colorReadFirst = colorReadFirstDefault
+
   waitAfterKeyPress = waitAfterKeyPressDefault
   
   waitAfterMove = waitAfterMoveDefault
@@ -169,12 +175,12 @@ Private Sub InitializeParameters()
   ApplicationStatusBar = vbNullString
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".InitializeParameters", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".InitializeParameters", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
-Private Sub InitializeCommandMap()
+Private Function InitializeCommandMap()
   On Error GoTo eh
   If Not commandMap Is Nothing Then Set commandMap = Nothing
   Set commandMap = CreateObject("Scripting.Dictionary")
@@ -232,6 +238,10 @@ Private Sub InitializeCommandMap()
     MODULE_NAME, "Color tolerance between detected and expected color, applied to each channel", _
     "New Value", "Default is " & maxColorToleranceDefault)
 
+  commandMap.Add "setcolorreadfirst", Array("SetColorReadFirst", "Set Color Read First", _
+    MODULE_NAME, "Read color on the further mouse commands, before moving mouse.", _
+    "New Value", "Default is " & colorReadFirstDefault & " {{True/False}}")
+
 
   commandMap.Add "setwaitafterkeypress", Array("SetWaitAfterKeyPress", "Set Wait After Key Press", _
     MODULE_NAME, "Waiting time after a Keypress, in ms", _
@@ -278,10 +288,10 @@ Private Sub InitializeCommandMap()
     "New Value", "Default is " & loopStackMaxSizeDefault)
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".InitializeCommandMap", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".InitializeCommandMap", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 '#############################################
 '#######                               #######
@@ -289,7 +299,7 @@ End Sub
 '#######                               #######
 '#############################################
 
-Public Sub PrepareExit()
+Public Function PrepareExit()
   On Error GoTo eh
   Call PrepareExitCommandsCondition
   Call PrepareExitCommandsDisplay
@@ -306,10 +316,10 @@ Public Sub PrepareExit()
   Call PrepareExitCommandsWindow
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExit", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExit", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 '#############################################
 '#######                               #######
@@ -317,16 +327,26 @@ End Sub
 '#######                               #######
 '#############################################
 
-Public Sub SaveCurrentRowValues()
+Public Sub test()
+Dim a As String, b As Long, c As String
+a = CStr(Cells(30, 4).Value)
+Debug.Print "a=" & a & " is numeric=" & IsNumber(a)
+b = InStr(a, ",")
+Debug.Print b
+c = Replace(a, ",", ".")
+Debug.Print "c=" & c & " is numeric=" & IsNumber(c)
+End Sub
+
+Public Function SaveCurrentRowValues()
   On Error GoTo eh
   Set currentRowRange = shAuto.Cells(currentRow, ColAStatus).Resize(1, ColAComment - ColAStatus + 1)
   currentRowArray = currentRowRange.Value2
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".SaveCurrentRowValues", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".SaveCurrentRowValues", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 '#############################################
 '#######                               #######
@@ -349,7 +369,7 @@ done:
   Exit Function
 eh:
   SetMaxEmptyRows = False
-  RaiseError MODULE_NAME & ".SetMaxEmptyRows", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetMaxEmptyRows", Err.Number, Err.Source, Err.Description, Erl
 End Function
   
 Public Function SetMinWaitTime(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -367,7 +387,7 @@ done:
   Exit Function
 eh:
   SetMinWaitTime = False
-  RaiseError MODULE_NAME & ".SetMinWaitTime", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetMinWaitTime", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetWaitTimeSplit(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -384,7 +404,7 @@ done:
   Exit Function
 eh:
   SetWaitTimeSplit = False
-  RaiseError MODULE_NAME & ".SetWaitTimeSplit", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetWaitTimeSplit", Err.Number, Err.Source, Err.Description, Erl
 End Function
   
 Public Function SetWindowCheckMax(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -402,7 +422,7 @@ done:
   Exit Function
 eh:
   SetWindowCheckMax = False
-  RaiseError MODULE_NAME & ".SetWindowCheckMax", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetWindowCheckMax", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetWindowCheckSplit(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -419,8 +439,9 @@ done:
   Exit Function
 eh:
   SetWindowCheckSplit = False
-  RaiseError MODULE_NAME & ".SetWindowCheckSplit", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetWindowCheckSplit", Err.Number, Err.Source, Err.Description, Erl
 End Function
+  
   
 Public Function SetColorCheckMax(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -437,7 +458,7 @@ done:
   Exit Function
 eh:
   SetColorCheckMax = False
-  RaiseError MODULE_NAME & ".SetColorCheckMax", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetColorCheckMax", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetColorCheckSplit(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -454,7 +475,7 @@ done:
   Exit Function
 eh:
   SetColorCheckSplit = False
-  RaiseError MODULE_NAME & ".SetColorCheckSplit", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetColorCheckSplit", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetMaxColorTolerance(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -471,9 +492,14 @@ done:
   Exit Function
 eh:
   SetMaxColorTolerance = False
-  RaiseError MODULE_NAME & ".SetMaxColorTolerance", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetMaxColorTolerance", Err.Number, Err.Source, Err.Description, Erl
 End Function
-  
+Public Function SetColorReadFirst(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
+  colorReadFirst = GetBoolean(CStr(currentRowArray(1, ColAArg1 + 0)))
+  SetColorReadFirst = True
+End Function
+
+
 Public Function SetWaitAfterKeyPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
   If IsNumber(CStr(currentRowArray(1, ColAArg1 + 0))) Then
@@ -489,7 +515,7 @@ done:
   Exit Function
 eh:
   SetWaitAfterKeyPress = False
-  RaiseError MODULE_NAME & ".SetWaitAfterKeyPress", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetWaitAfterKeyPress", Err.Number, Err.Source, Err.Description, Erl
 End Function
   
 Public Function SetWaitAfterMove(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -507,7 +533,7 @@ done:
   Exit Function
 eh:
   SetWaitAfterMove = False
-  RaiseError MODULE_NAME & ".SetWaitAfterMove", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetWaitAfterMove", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetWaitAfterClick(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -524,7 +550,7 @@ done:
   Exit Function
 eh:
   SetWaitAfterClick = False
-  RaiseError MODULE_NAME & ".SetWaitAfterClick", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetWaitAfterClick", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetPositionTolerance(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -541,7 +567,7 @@ done:
   Exit Function
 eh:
   SetPositionTolerance = False
-  RaiseError MODULE_NAME & ".SetPositionTolerance", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetPositionTolerance", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetShakeMovementDist(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -558,7 +584,7 @@ done:
   Exit Function
 eh:
   SetShakeMovementDist = False
-  RaiseError MODULE_NAME & ".SetShakeMovementDist", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetShakeMovementDist", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function SetShakeMovementWait(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -575,9 +601,9 @@ done:
   Exit Function
 eh:
   SetShakeMovementWait = False
-  RaiseError MODULE_NAME & ".SetShakeMovementWait", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetShakeMovementWait", Err.Number, Err.Source, Err.Description, Erl
 End Function
-  
+
 Public Function SetStartWithRows(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   startWithRows = GetBoolean(CStr(currentRowArray(1, ColAArg1 + 0)))
   SetStartWithRows = True
@@ -597,6 +623,6 @@ done:
   Exit Function
 eh:
   SetLoopStackMaxSize = False
-  RaiseError MODULE_NAME & ".SetLoopStackMaxSize", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SetLoopStackMaxSize", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
