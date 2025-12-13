@@ -5,14 +5,14 @@ Private Const MODULE_NAME   As String = "CommandsDisplay"
 'https://www.vbarchiv.net/api/api_changedisplaysettings.html
 
 Private tmpHwnd As LongPtr
-Private Declare PtrSafe Function GetWindowRect Lib "user32" (ByVal hWnd As LongPtr, lpRect As RECT) As Long
+Private Declare PtrSafe Function GetWindowRect Lib "user32" (ByVal hwnd As LongPtr, lpRect As RECT) As Long
 Private Declare PtrSafe Function GetDesktopWindow Lib "user32" () As LongPtr
 
+Private Declare PtrSafe Function ChangeDisplaySettingsEx Lib "user32" Alias "ChangeDisplaySettingsExA" (ByVal lpszDeviceName As String, lpDevMode As DEVMODE, ByVal hwnd As LongPtr, ByVal dwflags As Long, ByVal lParam As LongPtr) As Long
 Private Declare PtrSafe Function ChangeDisplaySettings Lib "user32" Alias "ChangeDisplaySettingsA" (lpDevMode As DEVMODE, ByVal DwFlag As Long) As Long
 Private Declare PtrSafe Function EnumDisplaySettings Lib "user32" Alias "EnumDisplaySettingsA" (ByVal lpszDeviceName As String, ByVal iModeNum As Long, lpDevMode As DEVMODE) As LongPtr
 'https://www.vbarchiv.net/api/api_enumdisplaydevices.html
-Private Declare PtrSafe Function EnumDisplayDevices Lib "user32" Alias "EnumDisplayDevicesA" (DeviceName As Any, ByVal iDevNum As Long, lpDisplayDevice As DISPLAY_DEVICE, ByVal dwFlags As Long) As Long
-
+Private Declare PtrSafe Function EnumDisplayDevices Lib "user32" Alias "EnumDisplayDevicesA" (DeviceName As Any, ByVal iDevNum As Long, lpDisplayDevice As DISPLAY_DEVICE, ByVal dwflags As Long) As Long
 
 
 Private Const CCFORMNAME = 32&
@@ -115,31 +115,33 @@ Private tmpL             As Long
 Private tmpS             As String
 
 
-Public Sub RegisterCommandsDisplay()
+Public Function RegisterCommandsDisplay()
   On Error GoTo eh
   ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "changeresolution", Array("ChangeResolution", "Change Resolution", _
     MODULE_NAME, "Change the resolution to a supported display resolution (640x480 , 800x600 , 1024x768 ...).", _
     "Width", "Number of pixels horizontally.", _
-    "Height", "Number of pixels vertically.")
+    "Height", "Number of pixels vertically.", _
+    "Monitor", "Index of the monitor. If nothing specified, the main monitor will be used.")
   commandMap.Add "getresolution", Array("GetResolution", "Get Resolution", _
     MODULE_NAME, "Retreive the current resolution of the main display.", _
     "Width", "Number of pixels horizontally.", _
-    "Height", "Number of pixels vertically.")
+    "Height", "Number of pixels vertically.", _
+    "Monitor", "Index of the monitor. If nothing specified, the main monitor will be used.")
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsDisplay", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsDisplay()
+  RaiseError MODULE_NAME & ".RegisterCommandsDisplay", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsDisplay()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsDisplay", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsDisplay", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Public Function ChangeResolution(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -152,28 +154,86 @@ Public Function ChangeResolution(Optional ExecutingTroughApplicationRun As Boole
   End If
   
   Dim DevM As DEVMODE
+  Dim Disp As DISPLAY_DEVICE
+  Dim MonitorIndex As Long
+  Dim TmpDevName As String
   Dim a As Boolean
   
-  tmpL = 0
-  
-  Do 'Enumerate settings
-    a = EnumDisplaySettings(lpszDeviceName:=0&, iModeNum:=tmpL&, lpDevMode:=DevM)
-    tmpL = tmpL + 1
-  Loop Until (a = False)
-  
-  DevM.dmFields = DM_PELSWIDTH Or DM_PELSHEIGHT 'Change settings
-  
-  DevM.dmPelsWidth = currentRowArray(1, ColAArg1 + 0)
-  DevM.dmPelsHeight = currentRowArray(1, ColAArg1 + 1)
-  
-  If ChangeDisplaySettings(DevM, CDS_TEST) <= 0 Then ChangeDisplaySettings DevM, CDS_UPDATEREGISTRY
+  If IsNumber(CStr(currentRowArray(1, ColAArg1 + 2))) Then
 
+    ' Read monitor index from array
+    MonitorIndex = CLng(currentRowArray(1, ColAArg1 + 2))
+    
+    ' Initialize DISPLAY_DEVICE structure
+    Disp.cb = Len(Disp)
+    
+    ' Get the device name for the specified monitor index
+    If EnumDisplayDevices(ByVal 0&, MonitorIndex, Disp, 0&) <> 0 Then
+      TmpDevName = Left$(Disp.DeviceName, InStr(1, Disp.DeviceName, vbNullChar) - 1)
+      
+      ' Initialize DEVMODE structure
+      DevM.dmSize = Len(DevM)
+      
+      ' Get current settings for the selected monitor
+      If EnumDisplaySettings(TmpDevName, ENUM_CURRENT_SETTINGS, DevM) <> 0 Then
+          
+          ' Update DEVMODE fields for new resolution
+          DevM.dmFields = DM_PELSWIDTH Or DM_PELSHEIGHT
+          DevM.dmPelsWidth = CLng(currentRowArray(1, ColAArg1 + 0))
+          DevM.dmPelsHeight = CLng(currentRowArray(1, ColAArg1 + 1))
+          
+          ' Test the new resolution before applying; no user intervention required
+          If ChangeDisplaySettingsEx(TmpDevName, DevM, 0&, CDS_TEST, 0&) = DISP_CHANGE_SUCCESSFUL Then
+            ' Apply and save the new resolution
+            ChangeDisplaySettingsEx TmpDevName, DevM, 0&, CDS_UPDATEREGISTRY, 0&
+          Else
+            ChangeResolution = False
+            RaiseError MODULE_NAME & "ChangeResolution", Err.Number, Err.Source, _
+              "Resolution change test failed for monitor : Arg3=[" & CStr(currentRowArray(1, ColAArg1 + 2)) & "].", Erl, 1, ExecutingTroughApplicationRun
+            Exit Function
+          End If
+        Else
+          ChangeResolution = False
+          RaiseError MODULE_NAME & "ChangeResolution", Err.Number, Err.Source, _
+            "Cannot retrieve current settings for monitor : Arg3=[" & CStr(currentRowArray(1, ColAArg1 + 2)) & "].", Erl, 2, ExecutingTroughApplicationRun
+          Exit Function
+        End If
+    Else
+        ChangeResolution = False
+        RaiseError MODULE_NAME & "ChangeResolution", Err.Number, Err.Source, _
+          "Monitor with index : Arg3=[" & CStr(currentRowArray(1, ColAArg1 + 2)) & "] does not exist.", Erl, 3, ExecutingTroughApplicationRun
+        Exit Function
+    End If
+  
+  Else
+    tmpL = 0
+    
+    Do 'Enumerate settings
+      a = EnumDisplaySettings(lpszDeviceName:=0&, iModeNum:=tmpL&, lpDevMode:=DevM)
+      tmpL = tmpL + 1
+    Loop Until (a = False)
+    
+    DevM.dmFields = DM_PELSWIDTH Or DM_PELSHEIGHT 'Change settings
+    
+    DevM.dmPelsWidth = currentRowArray(1, ColAArg1 + 0)
+    DevM.dmPelsHeight = currentRowArray(1, ColAArg1 + 1)
+    
+    If ChangeDisplaySettings(DevM, CDS_TEST) <= 0 Then
+      ChangeDisplaySettings DevM, CDS_UPDATEREGISTRY
+    Else
+      ChangeResolution = False
+      RaiseError MODULE_NAME & "ChangeResolution", Err.Number, Err.Source, _
+        "Resolution change test failed.", Erl, 4, ExecutingTroughApplicationRun
+      Exit Function
+    End If
+  End If
+  
 done:
   ChangeResolution = True
   Exit Function
 eh:
   ChangeResolution = False
-  RaiseError MODULE_NAME & "ChangeResolution", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & "ChangeResolution", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '*****************************************************************
@@ -185,21 +245,53 @@ End Function
 '*****************************************************************
 Public Function GetResolution(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
-  Dim DevM As DEVMODE
-  tmpL = 0
-  'while enumdisplaydevices(
+  
+  If IsNumber(CStr(currentRowArray(1, ColAArg1 + 2))) Then
+  
+    Dim DevM As DEVMODE
+    Dim Disp As DISPLAY_DEVICE
+    Dim MonitorIndex As Long
+    Dim TmpDevName As String
+    MonitorIndex = CLng(currentRowArray(1, ColAArg1 + 2))
 
-  GetWindowRect GetDesktopWindow(), rc
-  With rc
-    currentRowRange(1, ColAArg1 + 0).Value = .Right - .Left
-    currentRowRange(1, ColAArg1 + 1).Value = .Bottom - .Top
-  End With
+   ' Initialize structures
+    Disp.cb = Len(Disp)
+    DevM.dmSize = Len(DevM)
+    
+    ' Take device for given index
+    If EnumDisplayDevices(ByVal 0&, MonitorIndex, Disp, 0&) <> 0 Then
+        TmpDevName = Left$(Disp.DeviceName, InStr(1, Disp.DeviceName, vbNullChar) - 1)
+        
+        ' Take current resolution
+        If EnumDisplaySettings(TmpDevName, ENUM_CURRENT_SETTINGS, DevM) <> 0 Then
+          currentRowRange(1, ColAArg1 + 0).Value = DevM.dmPelsWidth
+          currentRowRange(1, ColAArg1 + 1).Value = DevM.dmPelsHeight
+        Else
+          GetResolution = False
+          RaiseError MODULE_NAME & "GetResolution", Err.Number, Err.Source, _
+            "Cannot retrieve current resolution for monitor : Arg3=[" & CStr(currentRowArray(1, ColAArg1 + 2)) & "].", Erl, 1, ExecutingTroughApplicationRun
+          Exit Function
+        End If
+    Else
+      GetResolution = False
+      RaiseError MODULE_NAME & "GetResolution", Err.Number, Err.Source, _
+        "Monitor with index : Arg3=[" & CStr(currentRowArray(1, ColAArg1 + 2)) & "] does not exist.", Erl, 2, ExecutingTroughApplicationRun
+      Exit Function
+    End If
+
+  Else
+    GetWindowRect GetDesktopWindow(), rc
+    With rc
+      currentRowRange(1, ColAArg1 + 0).Value = .Right - .Left
+      currentRowRange(1, ColAArg1 + 1).Value = .Bottom - .Top
+    End With
+  End If
 done:
   GetResolution = True
   Exit Function
 eh:
   GetResolution = False
-  RaiseError MODULE_NAME & "GetResolution", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & "GetResolution", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 ' Alle möglichen Auflösungen aller Grafikkarten ermitteln (Windows 98, ME, NT, 2000)
