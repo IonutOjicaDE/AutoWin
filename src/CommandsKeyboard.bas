@@ -183,39 +183,39 @@ Private tmpR          As Range
 Private Codes(0 To 9) As Byte
 
 
-Public Sub RegisterCommandsKeyboard()
+Public Function RegisterCommandsKeyboard()
   On Error GoTo eh
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "sendkeystoactivewindow", Array("SendKeysToActiveWindow", "Send Keys To Active Window", _
     MODULE_NAME, "Simulate the writing of the text from the arguments to the active window", _
-    "Text", "Text to write to the active window", _
-    "Text2", "Text to write to the active window", _
-    "Text3", "Text to write to the active window (and so on)")
+    "Text", "Text to write to the active window." & keyPressSendKeys, _
+    "Text2", "Text to write to the active window." & keyPressSendKeys, _
+    "Text3", "Text to write to the active window (and so on)." & keyPressSendKeys)
   
   commandMap.Add "write", Array("SendKeysToActiveWindow", "Write", _
     MODULE_NAME, "Simulate the writing of the text from the arguments to the active window", _
-    "Text", "Text to write to the active window", _
-    "Text2", "Text to write to the active window", _
-    "Text3", "Text to write to the active window (and so on)")
+    "Text", "Text to write to the active window." & keyPressSendKeys, _
+    "Text2", "Text to write to the active window." & keyPressSendKeys, _
+    "Text3", "Text to write to the active window (and so on)." & keyPressSendKeys)
 
 
   commandMap.Add "keypress", Array("KeyPress", "Key Press", _
     MODULE_NAME, "Simulate the pressing of the key specified in the arguments. After all keys were pressed, simulate the eliberation of all the keys pressed.", _
-    "Key", "Key to be pressed", _
-    "Key2", "Key to be pressed", _
-    "Key3", "Key to be pressed (and so on)")
+    "Key", "Key to be pressed." & keyPressName, _
+    "Key2", "Key to be pressed." & keyPressName, _
+    "Key3", "Key to be pressed (and so on)." & keyPressName)
   
   commandMap.Add "keydown", Array("KeyDown", "Key Down", _
     MODULE_NAME, "Simulate the pressing of the key specified in the arguments.", _
-    "Key", "Key to be pressed", _
-    "Key2", "Key to be pressed", _
-    "Key3", "Key to be pressed (and so on)")
+    "Key", "Key to be pressed." & keyPressName, _
+    "Key2", "Key to be pressed." & keyPressName, _
+    "Key3", "Key to be pressed (and so on)." & keyPressName)
   
   commandMap.Add "keyup", Array("KeyUp", "Key Up", _
     MODULE_NAME, "Simulate the eliberation of the key specified in the arguments.", _
-    "Key", "Key to be depressed", _
-    "Key2", "Key to be depressed", _
-    "Key3", "Key to be depressed (and so on)")
+    "Key", "Key to be depressed." & keyPressName, _
+    "Key2", "Key to be depressed." & keyPressName, _
+    "Key3", "Key to be depressed (and so on)." & keyPressName)
 
 
 
@@ -339,18 +339,18 @@ Public Sub RegisterCommandsKeyboard()
   Next
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsKeyboard", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsKeyboard()
+  RaiseError MODULE_NAME & ".RegisterCommandsKeyboard", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsKeyboard()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsKeyboard", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsKeyboard", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Public Function SendKeysToActiveWindow(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -367,7 +367,7 @@ done:
   Exit Function
 eh:
   SendKeysToActiveWindow = False
-  RaiseError MODULE_NAME & ".SendKeysToActiveWindow", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SendKeysToActiveWindow", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -387,7 +387,7 @@ done:
   Exit Function
 eh:
   KeyPress = False
-  RaiseError MODULE_NAME & ".KeyPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".KeyPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function KeyDown(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -401,7 +401,7 @@ done:
   Exit Function
 eh:
   KeyDown = False
-  RaiseError MODULE_NAME & ".KeyDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".KeyDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function KeyUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -415,7 +415,7 @@ done:
   Exit Function
 eh:
   KeyUp = False
-  RaiseError MODULE_NAME & ".KeyUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".KeyUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -438,7 +438,7 @@ Invalid:
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".GetCode", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GetCode", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function ReadCodes() As Boolean
   On Error GoTo eh
@@ -451,7 +451,7 @@ done:
   Exit Function
 eh:
   ReadCodes = False
-  RaiseError MODULE_NAME & ".ReadCodes", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".ReadCodes", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -470,7 +470,7 @@ done:
   Exit Function
 eh:
   GetKeybLayoutAsString = vbNullString
-  RaiseError MODULE_NAME & ".GetKeybLayoutAsString", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GetKeybLayoutAsString", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function GetKeybLayout(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeyboardlayoutnamea
@@ -488,7 +488,7 @@ done:
   Exit Function
 eh:
   GetKeybLayout = False
-  RaiseError MODULE_NAME & ".PrepareExitCommandsFile", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".PrepareExitCommandsFile", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function SetKeybLayout(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' https://docs.microsoft.com/de-de/windows/win32/api/winuser/nf-winuser-activatekeyboardlayout
@@ -515,7 +515,7 @@ done:
   Exit Function
 eh:
   SetKeybLayout = False
-  RaiseError MODULE_NAME & ".SetKeybLayout", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SetKeybLayout", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 #If Win64 Then
@@ -535,7 +535,7 @@ Private Function LoadKeyboardLayout(ByVal LCID As String) As Long
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".LoadKeyboardLayout", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".LoadKeyboardLayout", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -567,7 +567,7 @@ done:
   Exit Function
 eh:
   CharDown = False
-  RaiseError MODULE_NAME & ".CharDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CharDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function CharUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -581,7 +581,7 @@ done:
   Exit Function
 eh:
   CharUp = False
-  RaiseError MODULE_NAME & ".CharUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CharUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function CharPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -595,7 +595,7 @@ done:
   Exit Function
 eh:
   CharPress = False
-  RaiseError MODULE_NAME & ".CharPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CharPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '############### Alt+Char ###############
@@ -611,7 +611,7 @@ done:
   Exit Function
 eh:
   AltCharDown = False
-  RaiseError MODULE_NAME & ".AltCharDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".AltCharDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function AltCharUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -625,7 +625,7 @@ done:
   Exit Function
 eh:
   AltCharUp = False
-  RaiseError MODULE_NAME & ".AltCharUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".AltCharUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function AltCharPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -639,7 +639,7 @@ done:
   Exit Function
 eh:
   AltCharPress = False
-  RaiseError MODULE_NAME & ".AltCharPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".AltCharPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '############### Control+Char ###############
@@ -655,7 +655,7 @@ done:
   Exit Function
 eh:
   CtrlCharDown = False
-  RaiseError MODULE_NAME & ".CtrlCharDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CtrlCharDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function CtrlCharUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -669,7 +669,7 @@ done:
   Exit Function
 eh:
   CtrlCharUp = False
-  RaiseError MODULE_NAME & ".CtrlCharUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CtrlCharUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function CtrlCharPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -683,7 +683,7 @@ done:
   Exit Function
 eh:
   CtrlCharPress = False
-  RaiseError MODULE_NAME & ".CtrlCharPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CtrlCharPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -702,7 +702,7 @@ Invalid:
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsFile", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".PrepareExitCommandsFile", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function ReadChars() As Boolean
   On Error GoTo eh
@@ -715,7 +715,7 @@ done:
   Exit Function
 eh:
   ReadChars = False
-  RaiseError MODULE_NAME & ".ReadChars", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".ReadChars", Err.Number, Err.Source, Err.Description, Erl
 End Function
 '
 'Public Function IsChar(ch As String) As Boolean
@@ -749,7 +749,7 @@ done:
   Exit Function
 eh:
   StringPress = False
-  RaiseError MODULE_NAME & ".StringPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".StringPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -771,7 +771,7 @@ done:
   Exit Function
 eh:
   SendInput_KeyDown = False
-  RaiseError MODULE_NAME & ".SendInput_KeyDown", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_KeyDown", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function SendInput_KeyUp(bKey As Byte) As Boolean
   On Error GoTo eh
@@ -787,7 +787,7 @@ done:
   Exit Function
 eh:
   SendInput_KeyUp = False
-  RaiseError MODULE_NAME & ".SendInput_KeyUp", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_KeyUp", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function SendInput_KeyPress(bKey As Byte) As Boolean
   On Error GoTo eh
@@ -808,7 +808,7 @@ done:
   Exit Function
 eh:
   SendInput_KeyPress = False
-  RaiseError MODULE_NAME & ".SendInput_KeyPress", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_KeyPress", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 '############### Alt+Key ###############
@@ -831,7 +831,7 @@ done:
   Exit Function
 eh:
   SendInput_AltKeyDown = False
-  RaiseError MODULE_NAME & ".SendInput_AltKeyDown", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_AltKeyDown", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function SendInput_AltKeyUp(bKey As Byte) As Boolean
   On Error GoTo eh
@@ -852,7 +852,7 @@ done:
   Exit Function
 eh:
   SendInput_AltKeyUp = False
-  RaiseError MODULE_NAME & ".SendInput_AltKeyUp", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_AltKeyUp", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function SendInput_AltKeyPress(bKey As Byte) As Boolean
   On Error GoTo eh
@@ -883,7 +883,7 @@ done:
   Exit Function
 eh:
   SendInput_AltKeyPress = False
-  RaiseError MODULE_NAME & ".SendInput_AltKeyPress", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_AltKeyPress", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 '############### Control+Key ###############
@@ -906,7 +906,7 @@ done:
   Exit Function
 eh:
   SendInput_CtrlKeyDown = False
-  RaiseError MODULE_NAME & ".SendInput_CtrlKeyDown", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_CtrlKeyDown", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function SendInput_CtrlKeyUp(bKey As Byte) As Boolean
   On Error GoTo eh
@@ -927,7 +927,7 @@ done:
   Exit Function
 eh:
   SendInput_CtrlKeyUp = False
-  RaiseError MODULE_NAME & ".SendInput_CtrlKeyUp", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_CtrlKeyUp", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Private Function SendInput_CtrlKeyPress(bKey As Byte) As Boolean
   On Error GoTo eh
@@ -958,7 +958,7 @@ done:
   Exit Function
 eh:
   SendInput_CtrlKeyPress = False
-  RaiseError MODULE_NAME & ".SendInput_CtrlKeyPress", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SendInput_CtrlKeyPress", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -972,7 +972,7 @@ done:
   Exit Function
 eh:
   AltDown = False
-  RaiseError MODULE_NAME & ".AltDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".AltDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
   End Function
 Public Function AltUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -982,7 +982,7 @@ done:
   Exit Function
 eh:
   AltUp = False
-  RaiseError MODULE_NAME & ".AltUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".AltUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
   End Function
 Public Function AltPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -992,7 +992,7 @@ done:
   Exit Function
 eh:
   AltPress = False
-  RaiseError MODULE_NAME & ".AltPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".AltPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '############### Control ###############
@@ -1004,7 +1004,7 @@ done:
   Exit Function
 eh:
   CtrlDown = False
-  RaiseError MODULE_NAME & ".CtrlDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CtrlDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function CtrlUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -1014,7 +1014,7 @@ done:
   Exit Function
 eh:
   CtrlUp = False
-  RaiseError MODULE_NAME & ".CtrlUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CtrlUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function CtrlPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -1024,7 +1024,7 @@ done:
   Exit Function
 eh:
   CtrlPress = False
-  RaiseError MODULE_NAME & ".CtrlPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CtrlPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '############### Shift ###############
@@ -1036,7 +1036,7 @@ done:
   Exit Function
 eh:
   ShiftDown = False
-  RaiseError MODULE_NAME & ".ShiftDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ShiftDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function ShiftUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -1046,7 +1046,7 @@ done:
   Exit Function
 eh:
   ShiftUp = False
-  RaiseError MODULE_NAME & ".ShiftUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ShiftUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function ShiftPress(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -1056,6 +1056,6 @@ done:
   Exit Function
 eh:
   ShiftPress = False
-  RaiseError MODULE_NAME & ".ShiftPress", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ShiftPress", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
