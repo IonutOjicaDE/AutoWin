@@ -3,7 +3,7 @@ Option Explicit
 Private Const MODULE_NAME   As String = "CommandsExecution"
 
 
-Public Sub RegisterCommandsExecute()
+Public Function RegisterCommandsExecute()
   On Error GoTo eh
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "runprogram", Array("RunProgram", "Run Program", _
@@ -12,18 +12,18 @@ Public Sub RegisterCommandsExecute()
     "Argument", "Here specify the argument for the program (can be '/G')")
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsExecute", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsExecute()
+  RaiseError MODULE_NAME & ".RegisterCommandsExecute", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsExecute()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsExecute", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsExecute", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Public Function RunProgram(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -41,5 +41,5 @@ done:
   Exit Function
 eh:
   RunProgram = False
-  RaiseError MODULE_NAME & ".RunProgram", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".RunProgram", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
