@@ -51,9 +51,9 @@ Public Sub StatusUpdate(s As String)
 done:
   Exit Sub
 eh:
-  RaiseError MODULE_NAME & ".StatusUpdate", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".StatusUpdate", Err.Number, Err.Source, Err.Description, Erl
 End Sub
-Public Sub ClearStatusColumn()
+Public Function ClearStatusColumn()
   On Error GoTo eh
   tmpL = GetLastLineOnColumn(shAuto, ColAStatus)
   If tmpL > startRow Then
@@ -64,11 +64,11 @@ Public Sub ClearStatusColumn()
   End If
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ClearStatusColumn", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub ClearKeyPressColumn()
+  RaiseError MODULE_NAME & ".ClearStatusColumn", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function ClearKeyPressColumn()
   On Error GoTo eh
   tmpL = GetLastLineOnColumn(shKey, ColKeyName)
   If tmpL > 1 Then
@@ -79,10 +79,10 @@ Public Sub ClearKeyPressColumn()
   End If
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ClearStatusColumn", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".ClearStatusColumn", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 '#############################################
 Public Function MySleep(ByRef ms As Long) As Boolean
@@ -94,6 +94,7 @@ Public Function MySleep(ByRef ms As Long) As Boolean
     Sleep minLong(msCurrent, waitTimeSplit)
     msCurrent = msCurrent - waitTimeSplit
     DoEvents
+    
     If MouseMovedByUser Then
       MySleep = True
       Exit Function
@@ -104,7 +105,7 @@ Public Function MySleep(ByRef ms As Long) As Boolean
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".MySleep", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".MySleep", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 '#############################################
@@ -159,7 +160,7 @@ Public Function inRangeLng(checked As Long, center As Long, delta As Long) As Bo
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".inRangeLng", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".inRangeLng", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function minLong(a As Long, b As Long) As Long
   minLong = IIf(a < b, a, b)
@@ -174,7 +175,7 @@ Public Function AreSamePointsLong(ByRef x1 As Long, ByRef y1 As Long, ByRef x2 A
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".AreSamePointsLong", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".AreSamePointsLong", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -189,7 +190,7 @@ Public Function inRangeInt(checked As Integer, center As Integer, delta As Integ
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".inRangeInt", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".inRangeInt", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function minInt(a As Integer, b As Integer) As Integer
   minInt = IIf(a < b, a, b)
@@ -204,7 +205,7 @@ Public Function AreSamePointsInt(ByRef x1 As Integer, ByRef y1 As Integer, ByRef
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".AreSamePointsInt", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".AreSamePointsInt", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -219,7 +220,7 @@ Public Function inRangeDouble(ByRef checked As Double, ByRef center As Double, B
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".inRangeDouble", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".inRangeDouble", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function minDouble(ByRef a As Double, ByRef b As Double) As Double
   minDouble = IIf(a < b, a, b)
@@ -234,7 +235,7 @@ Public Function AreSamePointsDouble(ByRef x1 As Double, ByRef y1 As Double, ByRe
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".AreSamePointsDouble", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".AreSamePointsDouble", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function RoundUp(ByRef d As Double) As Long
   On Error GoTo eh
@@ -243,7 +244,7 @@ Public Function RoundUp(ByRef d As Double) As Long
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RoundUp", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".RoundUp", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function RoundDown(ByRef d As Double) As Long
   On Error GoTo eh
@@ -252,7 +253,7 @@ Public Function RoundDown(ByRef d As Double) As Long
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RoundDown", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".RoundDown", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -290,7 +291,7 @@ Public Function ArraySize(Matrix As Variant, Optional Dimension As Long = 1&) As
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ArraySize", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".ArraySize", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 '#############################################
@@ -350,9 +351,9 @@ End Function
 Public Sub StatusBarScheduleToRevert(Optional ByRef AfterSeconds As Long = 5)
   Application.OnTime Now + TimeSerial(0, 0, minLong(Abs(AfterSeconds), 59)), "StatusBarRevert"
 End Sub
-Public Sub StatusBarRevert()
+Public Function StatusBarRevert()
   Application.StatusBar = False
-End Sub
+End Function
 
 
 '#############################################
