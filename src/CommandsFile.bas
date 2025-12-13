@@ -13,7 +13,7 @@ Private FileSystem As New FileSystemObject
 
 Private tmpS As String
 
-Public Sub RegisterCommandsFile()
+Public Function RegisterCommandsFile()
   On Error GoTo eh
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "foreachfileinfolder", Array("ForEachFileInFolder", "For Each File In Folder", _
@@ -34,18 +34,18 @@ Public Sub RegisterCommandsFile()
     MODULE_NAME, "Here ends the loop")
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsFile", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsFile()
+  RaiseError MODULE_NAME & ".RegisterCommandsFile", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsFile()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsFile", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsFile", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -73,7 +73,7 @@ done:
   ForEachFileInFolder = True
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ForEachFileInFolder", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForEachFileInFolder", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function ForEachFileInFolderNext(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -91,7 +91,7 @@ done:
   ForEachFileInFolderNext = True
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ForEachFileInFolderNext", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForEachFileInFolderNext", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -117,7 +117,7 @@ done:
   ForEachFolderInFolder = True
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ForEachFolderInFolder", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForEachFolderInFolder", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function ForEachFolderInFolderNext(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -135,6 +135,6 @@ done:
   ForEachFolderInFolderNext = True
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".ForEachFolderInFolderNext", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForEachFolderInFolderNext", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
