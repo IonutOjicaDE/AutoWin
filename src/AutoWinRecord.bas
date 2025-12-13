@@ -99,7 +99,7 @@ done:
 eh:
   Application.StatusBar = False
   Record = False
-  RaiseError MODULE_NAME & ".Record", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".Record", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function MouseHookProc(ByVal lngCode As Long, ByVal wParam As LongPtr, ByRef lParam As MOUSELLHOOKSTRUCT) As LongPtr
@@ -133,7 +133,7 @@ Public Function MouseHookProc(ByVal lngCode As Long, ByVal wParam As LongPtr, By
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".MouseHookProc", Err.Number, Err.Source, Err.description, Erl, , True
+  RaiseError MODULE_NAME & ".MouseHookProc", Err.Number, Err.Source, Err.Description, Erl, , True
 End Function
 
 Public Function KeyHookProc(ByVal lngCode As Long, ByVal wParam As LongPtr, ByRef lParam As KBDLLHOOKSTRUCT) As LongPtr
@@ -156,7 +156,7 @@ Public Function KeyHookProc(ByVal lngCode As Long, ByVal wParam As LongPtr, ByRe
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".KeyHookProc", Err.Number, Err.Source, Err.description, Erl, , True
+  RaiseError MODULE_NAME & ".KeyHookProc", Err.Number, Err.Source, Err.Description, Erl, , True
 End Function
 
 
@@ -203,7 +203,7 @@ Private Sub RecordMouseDown(Text As String)
 done:
   Exit Sub
 eh:
-  RaiseError MODULE_NAME & ".RecordMouseDown", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".RecordMouseDown", Err.Number, Err.Source, Err.Description, Erl
 End Sub
 
 Private Sub RecordMouseUp(Text As String)
@@ -226,7 +226,7 @@ Private Sub RecordMouseUp(Text As String)
 done:
   Exit Sub
 eh:
-  RaiseError MODULE_NAME & ".RecordMouseUp", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".RecordMouseUp", Err.Number, Err.Source, Err.Description, Erl
 End Sub
 
 
@@ -305,7 +305,7 @@ Private Sub RecordKeyDown(Text As String)
 done:
   Exit Sub
 eh:
-  RaiseError MODULE_NAME & ".RecordKeyDown", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".RecordKeyDown", Err.Number, Err.Source, Err.Description, Erl
 End Sub
 
 Private Sub RecordKeyUp(Text As String)
@@ -470,7 +470,7 @@ done:
   Call CenterViewToCurrentRow
   Exit Sub
 eh:
-  RaiseError MODULE_NAME & ".RecordKeyUp", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".RecordKeyUp", Err.Number, Err.Source, Err.Description, Erl
 End Sub
 
 
@@ -481,19 +481,19 @@ End Sub
 
 
 
-Private Sub WritePauseCol()
+Private Function WritePauseCol()
   On Error GoTo eh
   currentRowRange(1, ColAPause).Value = EndTimer
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".WritePauseCol", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".WritePauseCol", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
-Private Sub SavePreviousRowValues()
+Private Function SavePreviousRowValues()
   On Error GoTo eh
 
   If currentRow - 1 >= startRow Then ' there is a previous command
@@ -522,10 +522,10 @@ Private Sub SavePreviousRowValues()
   End If
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".SavePreviousRowValues", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".SavePreviousRowValues", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
