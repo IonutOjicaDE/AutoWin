@@ -21,7 +21,7 @@ Private Const colorFormatLong As Long = 1 ' white = 16 777 215, black = 0, red =
 Private Const colorFormatRGB  As Long = 2 ' white = 255, 255, 255 , black = 0 0 0 , red = 255,0,0 , green = 0,255,0
 Private Const colorFormatHEX  As Long = 3 ' white = #FFFFFF = #FFF, black = #000000 = #000, red = #FF0000 = #f00, green = #00ff00 = #0f0
 
-Public Sub RegisterCommandsScreenColor()
+Public Function RegisterCommandsScreenColor()
   On Error GoTo eh
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "getcolorundercursor", Array("GetColorUnderCursor", "Get Color Under Cursor", _
@@ -71,19 +71,19 @@ Public Sub RegisterCommandsScreenColor()
 
   WindowDC = GetWindowDC(0)
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsScreenColor", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".RegisterCommandsScreenColor", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
-Public Sub PrepareExitCommandsScreenColor()
+Public Function PrepareExitCommandsScreenColor()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsScreenColor", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsScreenColor", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Private Function IsValidClickCommand() As Boolean
@@ -147,7 +147,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfColorThenSkip = False
-  RaiseError MODULE_NAME & ".CommandIfColorThenSkip", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfColorThenSkip", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -199,7 +199,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfColorThenGoTo = False
-  RaiseError MODULE_NAME & ".CommandIfColorThenGoTo", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfColorThenGoTo", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -260,7 +260,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfColorThenSkip = False
-  RaiseError MODULE_NAME & ".CommandIfWaitColorThenSkip", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfWaitColorThenSkip", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -321,7 +321,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfColorThenGoTo = False
-  RaiseError MODULE_NAME & ".CommandIfWaitColorThenGoTo", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfWaitColorThenGoTo", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -344,17 +344,39 @@ Public Function WaitColorUnderCursor(Optional ExecutingTroughApplicationRun As B
   End If
 
   ' Get cursor position
+  GetCursorPos MousePos
   If IsValidClickCommand Then
-    MousePos.x = CLng(currentRowArray(1, ColAArg1 + 0)): MousePos.y = CLng(currentRowArray(1, ColAArg1 + 1))
-  Else
-    GetCursorPos MousePos
+    If IsNumber(CStr(currentRowArray(1, ColAArg1 + 0))) Then MousePos.x = CLng(currentRowArray(1, ColAArg1 + 0))
+    If IsNumber(CStr(currentRowArray(1, ColAArg1 + 1))) Then MousePos.y = CLng(currentRowArray(1, ColAArg1 + 1))
+  End If
+
+
+  Static timeToCheckAndWait As Long
+
+  If colorReadFirst Then
+    timeToCheckAndWait = colorCheckMax
+    Do Until timeToCheckAndWait <= 0
+      tmpL = GetPixel(WindowDC, MousePos.x, MousePos.y)
+      If IsColorWithinTolerance(tmpL, colorLng, maxColorTolerance) Then
+        WaitColorUnderCursor = True
+        Exit Function
+      End If
+      Sleep minLong(timeToCheckAndWait, colorCheckSplit)
+      timeToCheckAndWait = timeToCheckAndWait - colorCheckSplit
+      DoEvents
+    Loop
+
+    tmpL = GetPixel(WindowDC, MousePos.x, MousePos.y)
+    currentRowRange(1, ColAColor).Value2 = ConvertLongToHex(tmpL)
+
+    WaitColorUnderCursor = True
+    Exit Function
   End If
 
   Do
-    Static timeToCheckAndWait As Long: timeToCheckAndWait = colorCheckMax
+    timeToCheckAndWait = colorCheckMax
     Do Until timeToCheckAndWait <= 0
       tmpL = GetPixel(WindowDC, MousePos.x, MousePos.y)
-      ' Check if color matches within tolerance
       If IsColorWithinTolerance(tmpL, colorLng, maxColorTolerance) Then
         WaitColorUnderCursor = True
         Exit Function
@@ -391,7 +413,7 @@ Public Function WaitColorUnderCursor(Optional ExecutingTroughApplicationRun As B
   Exit Function
 eh:
   WaitColorUnderCursor = False
-  RaiseError MODULE_NAME & ".WaitColorUnderCursor", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WaitColorUnderCursor", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Private Function DetectColorFormatAndExtractColor(ByRef colorText As String, ByRef format As Byte) As Long
@@ -567,15 +589,17 @@ done:
   Exit Function
 eh:
   GetColorUnderCursor = False
-  RaiseError MODULE_NAME & ".GetColorUnderCursor", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetColorUnderCursor", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function GetColorFromPoint(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' Arg1: X-value of the pixel to retrieve the color
 ' Arg2: Y-value of the pixel to retrieve the color
 ' Arg3: Here will be written the color of the pixel in Hex format
   On Error GoTo eh
-  If IsNumber(CStr(currentRowArray(1, ColAArg1 + 0))) And IsNumber(CStr(currentRowArray(1, ColAArg1 + 1))) Then
-    MousePos.x = CLng(currentRowArray(1, ColAArg1 + 0)): MousePos.y = CLng(currentRowArray(1, ColAArg1 + 1))
+  If IsNumber(CStr(currentRowArray(1, ColAArg1 + 0))) Or IsNumber(CStr(currentRowArray(1, ColAArg1 + 1))) Then
+    GetCursorPos MousePos
+    If IsNumber(CStr(currentRowArray(1, ColAArg1 + 0))) Then MousePos.x = CLng(currentRowArray(1, ColAArg1 + 0))
+    If IsNumber(CStr(currentRowArray(1, ColAArg1 + 1))) Then MousePos.y = CLng(currentRowArray(1, ColAArg1 + 1))
     currentRowRange(1, ColAArg1 + 2).Value = ConvertLongToHex(GetPixel(WindowDC, MousePos.x, MousePos.y))
   Else
     GetColorFromPoint = False
@@ -588,7 +612,7 @@ done:
   Exit Function
 eh:
   GetColorFromPoint = False
-  RaiseError MODULE_NAME & ".GetColorFromPoint", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetColorFromPoint", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -601,7 +625,7 @@ done:
   Exit Function
 eh:
   GetColorUnderCursorAsHex = ""
-  RaiseError MODULE_NAME & ".GetColorUnderCursorAsHex", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GetColorUnderCursorAsHex", Err.Number, Err.Source, Err.Description, Erl
 End Function
 Public Function GetColorFromPointAsHex(x As Long, y As Long) As String
   On Error GoTo eh
@@ -611,6 +635,6 @@ done:
   Exit Function
 eh:
   GetColorFromPointAsHex = ""
-  RaiseError MODULE_NAME & ".GetColorFromPointAsHex", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GetColorFromPointAsHex", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
