@@ -23,7 +23,7 @@ Private PauseByMouseMove As Byte '0=not paused, 1=paused with StopByMouseMove=tr
 Private MouseNow As POINTAPI
 Private MousePos As POINTAPI
 
-Public Sub RegisterCommandsMouse()
+Public Function RegisterCommandsMouse()
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "mousemovedetection", Array("MoveDetection", "Mouse Move Detection", _
     MODULE_NAME, "", _
@@ -85,18 +85,18 @@ Public Sub RegisterCommandsMouse()
   GetCursorPos MousePos
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsMouse", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsMouse()
+  RaiseError MODULE_NAME & ".RegisterCommandsMouse", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsMouse()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsMouse", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsMouse", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -124,7 +124,7 @@ done:
   Exit Function
 eh:
   MoveDetection = False
-  RaiseError MODULE_NAME & ".MoveDetection", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".MoveDetection", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Sub StopMoveDetection(): StopByMouseMove = False: PauseByMouseMove = 0: End Sub
@@ -139,7 +139,7 @@ done:
   Exit Function
 eh:
   ReadMouseXY = False
-  RaiseError MODULE_NAME & ".ReadMouseXY", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ReadMouseXY", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function MoveMouse(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 'https://stackoverflow.com/questions/13896658/sendinput-vb-basic-example
@@ -166,7 +166,7 @@ done:
   Exit Function
 eh:
   MoveMouse = False
-  RaiseError MODULE_NAME & ".MoveMouse", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".MoveMouse", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function LeftClick(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -180,7 +180,7 @@ done:
   Exit Function
 eh:
   LeftClick = False
-  RaiseError MODULE_NAME & ".LeftClick", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".LeftClick", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function LeftDoubleClick(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -197,7 +197,7 @@ done:
   Exit Function
 eh:
   LeftDoubleClick = False
-  RaiseError MODULE_NAME & ".LeftDoubleClick", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".LeftDoubleClick", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function RightClick(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -210,7 +210,7 @@ done:
   Exit Function
 eh:
   RightClick = False
-  RaiseError MODULE_NAME & ".RightClick", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".RightClick", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function MiddleClick(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -223,7 +223,7 @@ done:
   Exit Function
 eh:
   MiddleClick = False
-  RaiseError MODULE_NAME & ".MiddleClick", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".MiddleClick", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function LeftClickDown(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -235,7 +235,7 @@ done:
   Exit Function
 eh:
   LeftClickDown = False
-  RaiseError MODULE_NAME & ".LeftClickDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".LeftClickDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function LeftClickUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -246,7 +246,7 @@ done:
   Exit Function
 eh:
   LeftClickUp = False
-  RaiseError MODULE_NAME & ".LeftClickUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".LeftClickUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function RightClickDown(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -258,7 +258,7 @@ done:
   Exit Function
 eh:
   RightClickDown = False
-  RaiseError MODULE_NAME & ".RightClickDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".RightClickDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function RightClickUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -269,7 +269,7 @@ done:
   Exit Function
 eh:
   RightClickUp = False
-  RaiseError MODULE_NAME & ".RightClickUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".RightClickUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function MiddleClickDown(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -281,7 +281,7 @@ done:
   Exit Function
 eh:
   MiddleClickDown = False
-  RaiseError MODULE_NAME & ".MiddleClickDown", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".MiddleClickDown", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function MiddleClickUp(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
   On Error GoTo eh
@@ -292,7 +292,7 @@ done:
   Exit Function
 eh:
   MiddleClickUp = False
-  RaiseError MODULE_NAME & ".MiddleClickUp", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".MiddleClickUp", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -312,10 +312,12 @@ Public Function MouseMovedByUser(Optional ExecutingTroughApplicationRun As Boole
   Else
     MouseMovedByUser = False
   End If
+  Sleep minWaitTime
+  GetCursorPos MouseNow
   MousePos.x = MouseNow.x: MousePos.y = MouseNow.y
 done:
   Exit Function
 eh:
   MouseMovedByUser = False
-  RaiseError MODULE_NAME & ".MouseMovedByUser", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".MouseMovedByUser", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
