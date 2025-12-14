@@ -30,10 +30,12 @@ Private tmpS             As String
 Private Const allCommandsText   As String = "All Commands"
 Private Const foundCommandsText As String = "Found Commands"
 
-Private mSubIdent()   As String        ' Cached arrays (1D, zero-based) – may be Empty when none
+Private mSubIdent()   As String        ' Cached arrays (1D, zero-based) - may be Empty when none
 Private mLabelIdent() As String
 Private mForIdent()   As String
 Private mLoopIdent()  As String
+Private mkeyPressName()     As String
+Private mkeyPressSendKeys() As String
 Private mIdentReady   As Boolean       ' Flag: is mSubNames filled
 
 
@@ -284,6 +286,9 @@ Private Function ArgDescHasListTokens(ByVal descText As String) As Boolean
   If InStr(descText, loopListLabel) > 0 Then ArgDescHasListTokens = True: Exit Function
   If InStr(descText, loopListFor) > 0 Then ArgDescHasListTokens = True: Exit Function
   If InStr(descText, loopListLoop) > 0 Then ArgDescHasListTokens = True: Exit Function
+
+  If InStr(descText, keyPressName) > 0 Then ArgDescHasListTokens = True: Exit Function
+  If InStr(descText, keyPressSendKeys) > 0 Then ArgDescHasListTokens = True: Exit Function
 End Function
 
 
@@ -421,23 +426,6 @@ Private Sub BuildAllIdents()
       If (cmdType And loopListFlagLoop) <> 0 Then mLoopIdent(cLoop) = identNorm:    cLoop = cLoop + 1
     End If
 
-
-'    Select Case cmdNorm
-'      Case loopTypeSub
-'        mSubIdent(cSub) = identNorm: cSub = cSub + 1
-'
-'      Case loopTypeLabel
-'        mLabelIdent(cLabel) = identNorm: cLabel = cLabel + 1
-'
-'      Case "for", "foreach"
-'        mForIdent(cFor) = identNorm: cFor = cFor + 1
-'
-'      Case "do", "dowhile", "dountil"
-'        mLoopIdent(cLoop) = identNorm: cLoop = cLoop + 1
-'
-'      'Case Else: ignore
-'    End Select
-
 NextRow:
   Next
 
@@ -446,6 +434,51 @@ NextRow:
   If cFor <= 0 Then Erase mForIdent Else ReDim Preserve mForIdent(0 To cFor - 1)
   If cLoop <= 0 Then Erase mLoopIdent Else ReDim Preserve mLoopIdent(0 To cLoop - 1)
   If cLabel <= 0 Then Erase mLabelIdent Else ReDim Preserve mLabelIdent(0 To cLabel - 1)
+
+  ' === Build KeyPress arrays from shKey (skip empty cells) ===
+  ' Read once into Variants for speed; allocate, pack, then trim.
+  lastRow = maxLong(GetLastLineOnColumn(shKey, ColKeyName), GetLastLineOnColumn(shKey, ColKeySendKeys))
+
+  If lastRow > 0 Then
+    Dim vKeyName As Variant, vKeySend As Variant
+    vKeyName = shKey.Range(shKey.Cells(1, ColKeyName), shKey.Cells(lastRow, ColKeyName)).Value2
+    vKeySend = shKey.Range(shKey.Cells(1, ColKeySendKeys), shKey.Cells(lastRow, ColKeySendKeys)).Value2
+
+    ' Preallocate to upper bound; we'll trim after packing non-empties.
+    ReDim mkeyPressName(0 To lastRow - 1)
+    ReDim mkeyPressSendKeys(0 To lastRow - 1)
+
+    Dim i As Long, cName As Long, cSend As Long
+    For i = 1 To lastRow
+      ' Pack names if non-empty, non-error
+      If Not IsEmpty(vKeyName(i, 1)) Then
+        If VarType(vKeyName(i, 1)) <> vbError Then
+          If LenB(vKeyName(i, 1)) > 0 Then
+            mkeyPressName(cName) = CStr(vKeyName(i, 1))
+            cName = cName + 1
+          End If
+        End If
+      End If
+
+      ' Pack sendkeys if non-empty, non-error
+      If Not IsEmpty(vKeySend(i, 1)) Then
+        If VarType(vKeySend(i, 1)) <> vbError Then
+          If LenB(vKeySend(i, 1)) > 0 Then
+            mkeyPressSendKeys(cSend) = CStr(vKeySend(i, 1))
+            cSend = cSend + 1
+          End If
+        End If
+      End If
+    Next i
+
+    ' Trim down to actual counts or erase if none
+    If cName <= 0 Then Erase mkeyPressName Else ReDim Preserve mkeyPressName(0 To cName - 1)
+    If cSend <= 0 Then Erase mkeyPressSendKeys Else ReDim Preserve mkeyPressSendKeys(0 To cSend - 1)
+  Else
+    ' No keys at all -> clear arrays
+    Erase mkeyPressName
+    Erase mkeyPressSendKeys
+  End If
 
   mIdentReady = True
 End Sub
