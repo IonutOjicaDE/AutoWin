@@ -205,10 +205,10 @@ Public Enum WndMsg           'for SendMessage, wMsg
   WM_STYLECHANGED = &H7D       'The WM_STYLECHANGED message is sent to a window after the SetWindowLong function has changed one or more of the window's styles.
   WM_STYLECHANGING = &H7C      'The WM_STYLECHANGING message is sent to a window when the SetWindowLong function is about to change one or more of the window's styles.
   WM_SYNCPAINT = &H88          'The WM_SYNCPAINT message is used to synchronize painting while avoiding linking independent GUI threads.
-  WM_SYSCHAR = &H106           'The WM_SYSCHAR message is posted to the window with the keyboard focus when a WM_SYSKEYDOWN message is translated by the TranslateMessage function. It specifies the character code of a system character key — that is, a character key that is pressed while the ALT key is down.
+  WM_SYSCHAR = &H106           'The WM_SYSCHAR message is posted to the window with the keyboard focus when a WM_SYSKEYDOWN message is translated by the TranslateMessage function. It specifies the character code of a system character key - that is, a character key that is pressed while the ALT key is down.
   WM_SYSCOLORCHANGE = &H15     'This message is sent to all top-level windows when a change is made to a system color setting.
   WM_SYSCOMMAND = &H112        'A window receives this message when the user chooses a command from the Window menu (formerly known as the system or control menu) or when the user chooses the maximize button, minimize button, restore button, or close button.
-  WM_SYSDEADCHAR = &H107       'The WM_SYSDEADCHAR message is sent to the window with the keyboard focus when a WM_SYSKEYDOWN message is translated by the TranslateMessage function. WM_SYSDEADCHAR specifies the character code of a system dead key — that is, a dead key that is pressed while holding down the ALT key.
+  WM_SYSDEADCHAR = &H107       'The WM_SYSDEADCHAR message is sent to the window with the keyboard focus when a WM_SYSKEYDOWN message is translated by the TranslateMessage function. WM_SYSDEADCHAR specifies the character code of a system dead key - that is, a dead key that is pressed while holding down the ALT key.
   WM_SYSKEYDOWN = &H104        'The WM_SYSKEYDOWN message is posted to the window with the keyboard focus when the user presses the F10 key (which activates the menu bar) or holds down the ALT key and then presses another key. It also occurs when no window currently has the keyboard focus; in this case, the WM_SYSKEYDOWN message is sent to the active window. The window that receives the message can distinguish between these two contexts by checking the context code in the lParam parameter.
   WM_SYSKEYUP = &H105          'The WM_SYSKEYUP message is posted to the window with the keyboard focus when the user releases a key that was pressed while the ALT key was held down. It also occurs when no window currently has the keyboard focus; in this case, the WM_SYSKEYUP message is sent to the active window. The window that receives the message can distinguish between these two contexts by checking the context code in the lParam parameter.
   WM_TCARD = &H52              'Sent to an application that has initiated a training card with Microsoft Windows Help. The message informs the application when the user clicks an authorable button. An application initiates a training card by specifying the HELP_TCARD command in a call to the WinHelp function.
@@ -415,25 +415,25 @@ Public Const ISC_SHOWUIALL = &HC000000F
 
 
 
-Public Sub RegisterCommandsSendMessage()
+Public Function RegisterCommandsSendMessage()
   On Error GoTo eh
 
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
 '  commandMap.Add "", ""
 '  commandMap.Add "", ""
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsSendMessage", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsSendMessage()
+  RaiseError MODULE_NAME & ".RegisterCommandsSendMessage", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsSendMessage()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsSendMessage", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsSendMessage", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -458,30 +458,30 @@ End Function
 
 ' This code uses a Timer object to periodically check for a dialog box to appear. If found, the code uses BM_CLICK to "click" the button labeled "Resume" to close the dialog box. Something akin to this code might make a nifty way to automatically clear out those annoying "Are you still online?" dialog boxes that some ISP connection programs open every 45 minutes or so. To use this code, place a timer control named Timer1 in a window and give it a period of something like 10000 (every 10 seconds).
 ' http://www.jasinskionline.com/windowsapi/ref/b/bm_click.html
-Private Sub Click_on_Button_each_10_Seconds()
-  Dim hwndDialog As Long  ' handle to the dialog box
-  Dim hwndButton As Long  ' handle to the Resume button
+Private Function Click_on_Button_each_10_Seconds()
+  Dim hWndDialog As Long  ' handle to the dialog box
+  Dim hWndButton As Long  ' handle to the Resume button
   Dim retval As LongPtr   ' return value
   
   ' First, see if the dialog box (titled "Inactivity Warning" is currently open.
-  'hwndDialog = FindWindow(CLng(0), "Inactivity Warning")
-  If hwndDialog = 0 Then Exit Sub
+  'hWndDialog = FindWindow(CLng(0), "Inactivity Warning")
+  If hWndDialog = 0 Then Exit Function
   
   ' Now get a handle to the "Resume" button in the dialog.
-  'hwndButton = FindWindowEx(hwndDialog, 0, CLng(0), "Resume")
+  'hWndButton = FindWindowEx(hWndDialog, 0, CLng(0), "Resume")
   
   ' After making sure that the dialog box is the active window, click "Resume".
-  'retval = SetActiveWindow(hwndDialog)
-  retval = SendMessage(hwndButton, BM_CLICK, ByVal CLng(0), ByVal CLng(0))
-End Sub
+  'retval = SetActiveWindow(hWndDialog)
+  retval = SendMessage(hWndButton, BM_CLICK, ByVal CLng(0), ByVal CLng(0))
+End Function
 
 
 
 
 ' https://www.mrexcel.com/board/threads/winapi-sendmessage.224647/
-Sub ExampleUsage()
+Function ExampleUsage()
   CloseDialog "Yes"
-End Sub
+End Function
 
 Function CloseDialog(ButtonText As String) As Boolean
   Dim DialogHwnd As Long
