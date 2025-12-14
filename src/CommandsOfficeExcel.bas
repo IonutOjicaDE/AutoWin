@@ -11,7 +11,7 @@ Private CountVisibleColumns As Long
 Private tmpS                As String
 
 
-Public Sub RegisterCommandsOfficeExcel()
+Public Function RegisterCommandsOfficeExcel()
   On Error GoTo eh
   CountVisibleRows = ActiveWindow.VisibleRange.Rows.count
   CountVisibleColumns = ActiveWindow.VisibleRange.Columns.count
@@ -44,18 +44,18 @@ Public Sub RegisterCommandsOfficeExcel()
     MODULE_NAME, "Write a formula inside a cell", "Cell address", "Cell address in form B2 or C7 within working sheet", "Formula", "Formula to write in the cell")
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsOfficeExcel", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsOfficeExcel()
+  RaiseError MODULE_NAME & ".RegisterCommandsOfficeExcel", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsOfficeExcel()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsOfficeExcel", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsOfficeExcel", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 Public Function OpenExcelDocument(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -68,7 +68,7 @@ done:
   Exit Function
 eh:
   OpenExcelDocument = False
-  RaiseError MODULE_NAME & ".OpenExcelDocument", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".OpenExcelDocument", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function OpenExcelDocumentWithDialog(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' https://powerspreadsheets.com/vba-open-workbook/
@@ -91,7 +91,7 @@ done:
   Exit Function
 eh:
   OpenExcelDocumentWithDialog = False
-  RaiseError MODULE_NAME & ".OpenExcelDocumentWithDialog", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".OpenExcelDocumentWithDialog", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function SetWorkingExcelDocument(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -113,7 +113,7 @@ Public Function SetWorkingExcelDocument(Optional ExecutingTroughApplicationRun A
   Exit Function
 eh:
   SetWorkingExcelDocument = False
-  RaiseError MODULE_NAME & ".SetWorkingExcelDocument", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SetWorkingExcelDocument", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function SetWorkingExcelSheet(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' Arg1=name of Worksheet
@@ -142,7 +142,7 @@ Public Function SetWorkingExcelSheet(Optional ExecutingTroughApplicationRun As B
   Exit Function
 eh:
   SetWorkingExcelSheet = False
-  RaiseError MODULE_NAME & ".SetWorkingExcelSheet", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SetWorkingExcelSheet", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function SetWorkingExcelCell(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' Arg1=row, Arg2=column
@@ -167,7 +167,7 @@ Public Function SetWorkingExcelCell(Optional ExecutingTroughApplicationRun As Bo
   Exit Function
 eh:
   SetWorkingExcelCell = False
-  RaiseError MODULE_NAME & ".SetWorkingExcelCell", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SetWorkingExcelCell", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 'Public Sub SendKeysFromCell(ByRef r As Range, ByRef MyKeysObj As keyKeys)
 '    MyKeysObj.SendKeysToActiveWindow WorkingSheet.Cells(r.Value, r.Offset(0, 1).Value).Text
@@ -198,7 +198,7 @@ Public Function CopyCellToClipboard(Optional ExecutingTroughApplicationRun As Bo
   Exit Function
 eh:
   CopyCellToClipboard = False
-  RaiseError MODULE_NAME & ".CopyCellToClipboard", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CopyCellToClipboard", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function WriteTextInCell(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -211,7 +211,7 @@ done:
   Exit Function
 eh:
   WriteTextInCell = False
-  RaiseError MODULE_NAME & ".WriteTextInCell", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WriteTextInCell", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function WriteFormulaInCell(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' Arg1=cell name in form B2 or C7 within Working Excel Sheet, Arg2=formula to write
@@ -223,7 +223,7 @@ done:
   Exit Function
 eh:
   WriteFormulaInCell = False
-  RaiseError MODULE_NAME & ".WriteFormulaInCell", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WriteFormulaInCell", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function CenterViewToCurrentRow(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -235,6 +235,6 @@ done:
   Exit Function
 eh:
   CenterViewToCurrentRow = False
-  RaiseError MODULE_NAME & ".CenterViewToCurrentRow", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CenterViewToCurrentRow", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 

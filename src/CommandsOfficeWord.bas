@@ -53,7 +53,7 @@ Public WordApp As Word.Application
 Public WordDoc As Word.Document
 
 
-Public Sub RegisterCommandsOfficeWord()
+Public Function RegisterCommandsOfficeWord()
   On Error GoTo eh
 
   Set WordDoc = Nothing
@@ -79,21 +79,21 @@ Public Sub RegisterCommandsOfficeWord()
     "New", "New text version")
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsOfficeWord", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsOfficeWord()
+  RaiseError MODULE_NAME & ".RegisterCommandsOfficeWord", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsOfficeWord()
   On Error GoTo eh
 
   Set WordDoc = Nothing
   Set WordApp = Nothing
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsOfficeWord", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsOfficeWord", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -118,7 +118,7 @@ done:
   Exit Function
 eh:
   StartWord = False
-  RaiseError MODULE_NAME & ".StartWord", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".StartWord", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -138,7 +138,7 @@ done:
   Exit Function
 eh:
   OpenWordDocument = False
-  RaiseError MODULE_NAME & ".OpenWordDocument", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".OpenWordDocument", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -158,7 +158,7 @@ done:
   Exit Function
 eh:
   CloseActiveWordDocument = False
-  RaiseError MODULE_NAME & ".CloseActiveWordDocument", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CloseActiveWordDocument", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -210,5 +210,5 @@ done:
   Exit Function
 eh:
   WordReplaceText = False
-  RaiseError MODULE_NAME & ".WordReplaceText", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WordReplaceText", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function

@@ -37,7 +37,7 @@ Private loopStackCapacity As Long     ' Tracks current allocated array size
 Private tmpL As Long, tmpS As String, tmpR As Range
 
 
-Public Sub RegisterCommandsLoop()
+Public Function RegisterCommandsLoop()
   On Error GoTo eh
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "sub", Array("SubToGoSub", "Sub", _
@@ -132,18 +132,18 @@ Public Sub RegisterCommandsLoop()
   loopStackCapacity = 0&
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsLoop", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsLoop()
+  RaiseError MODULE_NAME & ".RegisterCommandsLoop", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsLoop()
   On Error GoTo eh
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsLoop", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsLoop", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -162,7 +162,7 @@ NormalExecution:
   Exit Function
 eh:
   GoSubs = False
-  RaiseError MODULE_NAME & ".GoSubs", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GoSubs", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function CommandIfThenExecuteSub(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -183,7 +183,7 @@ NormalExecution:
   Exit Function
 eh:
   CommandIfThenExecuteSub = False
-  RaiseError MODULE_NAME & ".CommandIfThenExecuteSub", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".CommandIfThenExecuteSub", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -232,7 +232,7 @@ NormalExecution:
   Exit Function
 eh:
   ExecuteSub = False
-  RaiseError MODULE_NAME & ".ExecuteSub", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".ExecuteSub", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 
@@ -273,7 +273,7 @@ NormalExecution:
   Exit Function
 eh:
   EndSubs = False
-  RaiseError MODULE_NAME & ".EndSubs", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".EndSubs", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -356,7 +356,7 @@ NormalExecution:
   Exit Function
 eh:
   GoToLabels = False
-  RaiseError MODULE_NAME & ".GoToLabels", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GoToLabels", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -398,7 +398,7 @@ NormalExecution:
   Exit Function
 eh:
   ReturnToGoto = False
-  RaiseError MODULE_NAME & ".ReturnToGoto", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ReturnToGoto", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -452,7 +452,7 @@ NormalExecution:
   Exit Function
 eh:
   DoStart = False
-  RaiseError MODULE_NAME & ".DoStart", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".DoStart", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -503,7 +503,7 @@ NormalExecution:
   Exit Function
 eh:
   ExitDo = False
-  RaiseError MODULE_NAME & ".ExitDo", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ExitDo", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -576,7 +576,7 @@ NormalExecution:
   Exit Function
 eh:
   DoLoop = False
-  RaiseError MODULE_NAME & ".DoLoop", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".DoLoop", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -673,7 +673,7 @@ NormalExecution:
   Exit Function
 eh:
   ForNormalStart = False
-  RaiseError MODULE_NAME & ".ForNormalStart", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForNormalStart", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -781,7 +781,7 @@ FaultExecution:
   Exit Function
 eh:
   ForEachStart = False
-  RaiseError MODULE_NAME & ".ForEachStart", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForEachStart", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -907,7 +907,7 @@ FaultExecution:
   Exit Function
 eh:
   ForNext = False
-  RaiseError MODULE_NAME & ".ForNext", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ForNext", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -951,7 +951,7 @@ FaultExecution:
   Exit Function
 eh:
   ExitFor = False
-  RaiseError MODULE_NAME & ".ExitFor", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".ExitFor", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -987,7 +987,7 @@ done:
   Exit Function
 eh:
   PushLoopStack = False
-  RaiseError MODULE_NAME & ".PushLoopStack", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".PushLoopStack", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 Private Function PopLoopStack() As LoopInfo
@@ -1014,7 +1014,7 @@ Private Function PopLoopStack() As LoopInfo
 done:
   Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PopLoopStack", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".PopLoopStack", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 Private Function SkipToMatchingNext(ByRef currentLoop As LoopInfo) As Boolean
@@ -1070,7 +1070,7 @@ NormalExecution:
   Exit Function
 eh:
   SkipToMatchingNext = False
-  RaiseError MODULE_NAME & ".SkipToMatchingNext", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".SkipToMatchingNext", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 Private Function GetReferencedCell(ByRef targetCell As Range) As Range
@@ -1116,6 +1116,6 @@ done:
   Exit Function
 eh:
   Set GetReferencedCell = Nothing
-  RaiseError MODULE_NAME & ".GetReferencedCell", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GetReferencedCell", Err.Number, Err.Source, Err.Description, Erl
 End Function
 

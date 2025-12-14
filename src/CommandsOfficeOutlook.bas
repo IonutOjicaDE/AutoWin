@@ -28,7 +28,7 @@ Private oAccount As Outlook.Account
 Private tmpL As Long
 
 
-Public Sub RegisterCommandsOfficeOutlook()
+Public Function RegisterCommandsOfficeOutlook()
   On Error GoTo eh
 
   Set OutlookApp = Nothing
@@ -59,11 +59,11 @@ Public Sub RegisterCommandsOfficeOutlook()
     "Attachment3", "and so on")
     
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsOfficeOutlook", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsOfficeOutlook()
+  RaiseError MODULE_NAME & ".RegisterCommandsOfficeOutlook", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsOfficeOutlook()
   On Error GoTo eh
 
   Set OutlookApp = Nothing
@@ -71,10 +71,10 @@ Public Sub PrepareExitCommandsOfficeOutlook()
   Set oAccount = Nothing
 
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsOfficeOutlook", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsOfficeOutlook", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -99,7 +99,7 @@ done:
   Exit Function
 eh:
   StartOutlook = False
-  RaiseError MODULE_NAME & ".StartOutlook", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".StartOutlook", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -138,7 +138,7 @@ done:
   Exit Function
 eh:
   SendEmail = False
-  RaiseError MODULE_NAME & ".SendEmail", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SendEmail", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -200,5 +200,5 @@ done:
   Exit Function
 eh:
   SendEmailFormated = False
-  RaiseError MODULE_NAME & ".SendEmailFormated", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SendEmailFormated", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
