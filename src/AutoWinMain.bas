@@ -21,7 +21,7 @@ Attribute Main.VB_ProcData.VB_Invoke_Func = "M\n14"
 done:
   Exit Sub
 eh:
-  DisplayError MODULE_NAME & ".Main", Err.Source, Err.description, Erl
+  DisplayError MODULE_NAME & ".Main", Err.Source, Err.Description, Erl
 End Sub
 
 Public Sub ShowCommands()
@@ -34,7 +34,7 @@ Attribute ShowCommands.VB_ProcData.VB_Invoke_Func = "N\n14"
 done:
   Exit Sub
 eh:
-  DisplayError MODULE_NAME & ".ShowCommands", Err.Source, Err.description, Erl
+  DisplayError MODULE_NAME & ".ShowCommands", Err.Source, Err.Description, Erl
 End Sub
 
 Public Sub MoveMouseToXY()
@@ -50,7 +50,7 @@ Attribute MoveMouseToXY.VB_ProcData.VB_Invoke_Func = "Y\n14"
 done:
   Exit Sub
 eh:
-  DisplayError MODULE_NAME & ".MoveMouseToXY", Err.Source, Err.description, Erl
+  DisplayError MODULE_NAME & ".MoveMouseToXY", Err.Source, Err.Description, Erl
 End Sub
 
 Public Sub ReadMouseToXY()
@@ -67,6 +67,6 @@ Attribute ReadMouseToXY.VB_ProcData.VB_Invoke_Func = "X\n14"
 done:
   Exit Sub
 eh:
-  DisplayError MODULE_NAME & ".MoveMouseToXY", Err.Source, Err.description, Erl
+  DisplayError MODULE_NAME & ".MoveMouseToXY", Err.Source, Err.Description, Erl
 End Sub
 

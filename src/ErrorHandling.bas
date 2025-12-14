@@ -109,7 +109,7 @@ Public Sub DisplayError(ByVal proc As String _
   Dim sMsg As String
   sMsg = vbNewLine & "#############################" & _
          vbNewLine & "The following error occurred:" & _
-         vbNewLine & Err.description & _
+         vbNewLine & Err.Description & _
          vbNewLine & vbNewLine & "Error Location is:"
   sMsg = sMsg & src & vbNewLine & proc
   
@@ -170,7 +170,7 @@ Private Sub Logger(Text As String)
   Close #filenumber
 eh:
   #If Debugging = 1 Then
-    Debug.Print "Error; " & Err.Number, Err.Source, Err.description
+    Debug.Print "Error; " & Err.Number, Err.Source, Err.Description
     Debug.Assert False
     Exit Sub
     Resume

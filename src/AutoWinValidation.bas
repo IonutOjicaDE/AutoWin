@@ -34,6 +34,6 @@ done:
   Exit Function
 eh:
   ValidateAutomationSheet = False
-  RaiseError MODULE_NAME & ".ValidateAutomationSheet", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".ValidateAutomationSheet", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
