@@ -12,9 +12,9 @@ Private Declare PtrSafe Function GetTickCount Lib "kernel32" () As Long
 '    #End If
 
 
-Public Sub StartTimer()
+Public Function StartTimer()
   Start = GetTickCount
-End Sub
+End Function
 
 '#If Win64 Then
 'Public Function EndTimer() As LongLong
