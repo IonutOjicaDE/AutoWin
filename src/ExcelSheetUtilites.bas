@@ -1,6 +1,6 @@
 Attribute VB_Name = "ExcelSheetUtilites"
 
-Public Sub CalculateNow()
+Public Function CalculateNow()
   'Application.Calculation = xlCalculationManual
   Application.ScreenUpdating = False
   Application.CalculateFull
@@ -8,9 +8,9 @@ Public Sub CalculateNow()
   DoEvents
   DoEvents
   Application.ScreenUpdating = True
-End Sub
+End Function
 
-Sub ShapePlacementMove()
+Function ShapePlacementMove()
 ' change all Shapes inside active Document Placement to xlMove ("Move but dont size with cells.")
 ' Ionut Ojica 15.06.2018
   Dim shBild As Shape
@@ -21,9 +21,9 @@ Sub ShapePlacementMove()
       shBild.Placement = xlMove ' xlFreeFloating, xlMove , xlMoveAndSize
     Next shBild
   Next shSheet
-End Sub
+End Function
 
-Sub ListFormats()
+Function ListFormats()
 ' lists the cell format templates
 ' http://www.office-loesung.de/ftopic627990_0_0_asc.php
   Application.ScreenUpdating = False
@@ -35,8 +35,8 @@ Sub ListFormats()
   Next
   Application.ScreenUpdating = True
 '  Application.EnableEvents = true
-End Sub
-Sub DeleteFormats()
+End Function
+Function DeleteFormats()
 ' delete certain cell format templates
 ' http://www.office-loesung.de/ftopic627990_0_0_asc.php
   Application.ScreenUpdating = False
@@ -53,9 +53,9 @@ Sub DeleteFormats()
   MsgBox (ActiveWorkbook.Styles.count)
   Application.ScreenUpdating = True
 '  Application.EnableEvents = true
-End Sub
+End Function
 
-Sub DeleteAllCustomFormats()
+Function DeleteAllCustomFormats()
 'to be tested
   Application.ScreenUpdating = False
 '  Application.EnableEvents = False
@@ -68,9 +68,9 @@ Sub DeleteAllCustomFormats()
   MsgBox (ActiveWorkbook.Styles.count)
   Application.ScreenUpdating = True
 '  Application.EnableEvents = true
-End Sub
+End Function
 
-Sub DeleteNumberFormats()
+Function DeleteNumberFormats()
 'to be tested; it takes too long
 'http://www.office-loesung.de/ftopic530067_0_0_asc.php
   Dim NuFo As Object
@@ -80,7 +80,6 @@ Sub DeleteNumberFormats()
   Dim NF
 
   Set NuFo = CreateObject("scripting.dictionary")
-
   For Each ws In ThisWorkbook.Worksheets
     i = i + 1
     Application.StatusBar = "Reading Number Format, Sheet " & i & " from " & ThisWorkbook.Worksheets.count
@@ -99,7 +98,7 @@ Sub DeleteNumberFormats()
   Next
   MsgBox i & " custom Number Formats removed."
   Application.StatusBar = False
-End Sub
+End Function
 
 Public Function EvaluateString(strTextString As String, dummy As Range)
 ' https://exceloffthegrid.com/turn-string-formula-with-evalute/
@@ -116,7 +115,7 @@ Public Function EvaluateFunctionX(FunctionText As String, Xreplace As Range)
   EvaluateFunctionX = Evaluate(FunctionText)
 End Function
 
-Sub Dename()
+Function Dename()
 ' Replace range names with cell references
 ' First select the cells to run onto
 ' https://www.excelforum.com/excel-formulas-and-functions/431148-replace-range-names-with-cell-references.html
@@ -126,4 +125,4 @@ Sub Dename()
     Cell.Formula = Cell.Formula
   Next
   ActiveSheet.TransitionFormEntry = False
-End Sub
+End Function
