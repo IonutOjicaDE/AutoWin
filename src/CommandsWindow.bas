@@ -34,10 +34,10 @@ End Type
 
 Private Declare PtrSafe Function FindWindow Lib "user32" Alias "FindWindowA" (ByVal lpClassName As String, ByVal lpWindowName As String) As LongPtr
 ' FindWindowEx:
-' hWnd1 – handle of the parrent (or 0 for desktop).
-' hWnd2 – handle of the last child found (to continue the search).
-' lpsz1 – the class of the child window. Must match exactly, without wildcards.
-' lpsz2 – title of the child window. Must match exactly, without wildcards.
+' hWnd1 - handle of the parrent (or 0 for desktop).
+' hWnd2 - handle of the last child found (to continue the search).
+' lpsz1 - the class of the child window. Must match exactly, without wildcards.
+' lpsz2 - title of the child window. Must match exactly, without wildcards.
 Private Declare PtrSafe Function FindWindowEx Lib "user32" Alias "FindWindowExA" (ByVal hWnd1 As LongPtr, ByVal hWnd2 As LongPtr, ByVal lpsz1 As String, ByVal lpsz2 As String) As LongPtr
 Private Declare PtrSafe Function GetNextWindow Lib "user32" Alias "GetWindow" (ByVal hWnd As LongPtr, ByVal wFlag As Long) As LongPtr
 Private Declare PtrSafe Function GetParent Lib "user32" (ByVal hWnd As LongPtr) As LongPtr
@@ -222,7 +222,7 @@ Private searchClass     As String  ' for EnumChildProc
 Private hDesktopWnd     As LongPtr, hTmpWnd As LongPtr
 
 
-Public Sub RegisterCommandsWindow()
+Public Function RegisterCommandsWindow()
   On Error GoTo eh
 ' Array(FunctionName, DisplayName, Category, Description, ArgName, ArgDescription...)
   commandMap.Add "getactivewindowname", Array("GetActiveWindowName", "Get Active Window Name", _
@@ -289,19 +289,19 @@ Public Sub RegisterCommandsWindow()
 
   WndPlcmt.Length = Len(WndPlcmt)
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".RegisterCommandsWindow", Err.Number, Err.Source, Err.description, Erl
-End Sub
-Public Sub PrepareExitCommandsWindow()
+  RaiseError MODULE_NAME & ".RegisterCommandsWindow", Err.Number, Err.Source, Err.Description, Erl
+End Function
+Public Function PrepareExitCommandsWindow()
   On Error GoTo eh
 
   Call RemoveAttachedThread
 done:
-  Exit Sub
+  Exit Function
 eh:
-  RaiseError MODULE_NAME & ".PrepareExitCommandsWindow", Err.Number, Err.Source, Err.description, Erl
-End Sub
+  RaiseError MODULE_NAME & ".PrepareExitCommandsWindow", Err.Number, Err.Source, Err.Description, Erl
+End Function
 
 
 
@@ -366,7 +366,7 @@ done:
   Exit Function
 eh:
   WaitWindowToActivate = False
-  RaiseError MODULE_NAME & ".WaitWindowToActivate", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WaitWindowToActivate", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '#############################################
@@ -389,7 +389,7 @@ done:
   Exit Function
 eh:
   AskNextStep = vbAbort
-  RaiseError MODULE_NAME & ".AskNextStep", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".AskNextStep", Err.Number, Err.Source, Err.Description, Erl
 End Function
 
 '#############################################
@@ -407,7 +407,7 @@ done:
   Exit Function
 eh:
   GetActiveWindowName = False
-  RaiseError MODULE_NAME & ".GetActiveWindowName", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetActiveWindowName", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function GetActiveWindowClass(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' Arg1=ClassName
@@ -419,7 +419,7 @@ done:
   Exit Function
 eh:
   GetActiveWindowClass = False
-  RaiseError MODULE_NAME & ".GetActiveWindowClass", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetActiveWindowClass", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 Public Function GetWindowNameFromClass(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
 ' Arg1=ClassName
@@ -452,7 +452,7 @@ done:
   Exit Function
 eh:
   GetWindowNameFromClass = False
-  RaiseError MODULE_NAME & ".GetWindowNameFromClass", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetWindowNameFromClass", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '#############################################
@@ -490,7 +490,7 @@ done:
   Exit Function
 eh:
   SetActiveWindowByName = False
-  RaiseError MODULE_NAME & ".SetActiveWindowByName", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SetActiveWindowByName", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -516,7 +516,7 @@ done:
   Exit Function
 eh:
   GetWindowPosition = False
-  RaiseError MODULE_NAME & ".GetWindowPosition", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetWindowPosition", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 Public Function SetWindowPosition(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -551,7 +551,7 @@ done:
   Exit Function
 eh:
   SetWindowPosition = False
-  RaiseError MODULE_NAME & ".SetWindowPosition", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".SetWindowPosition", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 '#############################################
@@ -584,7 +584,7 @@ done:
   Exit Function
 eh:
   WindowRestore = False
-  RaiseError MODULE_NAME & ".WindowRestore", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WindowRestore", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 '#############################################
 Public Function WindowMinimize(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -599,7 +599,7 @@ done:
   Exit Function
 eh:
   WindowMinimize = False
-  RaiseError MODULE_NAME & ".WindowMinimize", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WindowMinimize", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 '#############################################
 Public Function WindowMaximize(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -614,7 +614,7 @@ done:
   Exit Function
 eh:
   WindowMaximize = False
-  RaiseError MODULE_NAME & ".WindowMaximize", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".WindowMaximize", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 '#############################################
 Public Function GetWindowState(Optional ExecutingTroughApplicationRun As Boolean = False) As Boolean
@@ -637,7 +637,7 @@ done:
   Exit Function
 eh:
   GetWindowState = False
-  RaiseError MODULE_NAME & ".GetWindowState", Err.Number, Err.Source, Err.description, Erl, , ExecutingTroughApplicationRun
+  RaiseError MODULE_NAME & ".GetWindowState", Err.Number, Err.Source, Err.Description, Erl, , ExecutingTroughApplicationRun
 End Function
 
 
@@ -805,7 +805,7 @@ done:
   Exit Function
 eh:
   GetHwndWithTitleOrActiveWindow = NULL_
-  RaiseError MODULE_NAME & ".GetHwndWithTitleOrActiveWindow", Err.Number, Err.Source, Err.description, Erl
+  RaiseError MODULE_NAME & ".GetHwndWithTitleOrActiveWindow", Err.Number, Err.Source, Err.Description, Erl
 End Function
 '#############################################
 Private Function GetHwndWithTitle(ByRef sTitle As String) As LongPtr
